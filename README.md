@@ -116,9 +116,13 @@ Feel free to fork the project, make improvements, and submit a pull request.
 
 ---
 
-## 📄 License
 
-This project is licensed under the **MIT License**.
+## Check out my LinkedIn for more updates:
+[Connect with me on LinkedIn](https://www.linkedin.com/posts/vigneshpalni3_dataanalytics-stockmarket-powerbi-activity-7324801203454836737-uOCf?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEYdRGgBfMQ8rqIcbxZgDgk8snn62tVoSdQ)
+
+## GitHub Repository:
+[GitHub Link](YOUR_GITHUB_LINK)
+
 
 ---
 
