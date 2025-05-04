@@ -5,12 +5,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# create a database connection
+# database credentials
 user = "root"
 password = "%40Vicky143"
 host = "localhost"
 database = "stocks"
 
+# create a engine
 engine=create_engine(f"mysql+pymysql://{user}:{password}@{host}/{database}")
 
 # Header
@@ -26,7 +27,7 @@ st.write('')
 def cut_symbol(symbol):
     return symbol.split(': ')[1]
 
-if option == "Top 10 gainers and losers":
+def show_gainers_loosers():
     # 1. Top 10 gainers and losers by yearly returns
     query = "SELECT * FROM yearly_returns ORDER BY yearly_returns DESC"
     df=pd.read_sql(query,engine)
@@ -39,8 +40,7 @@ if option == "Top 10 gainers and losers":
     st.dataframe(df.tail(10))
     # bar chart of top 10 losers
     st.bar_chart(df.tail(10).set_index('symbol')["yearly_returns"])
-
-elif option=="Red & Green stocks count,average price and average volume":
+def calc_statistics():
     # 2.Red & Green stocks count,average price and average volume
     query = "SELECT * FROM yearly_returns ORDER BY yearly_returns DESC"
     df=pd.read_sql(query,engine)
@@ -60,7 +60,7 @@ elif option=="Red & Green stocks count,average price and average volume":
     st.write("Average price and volume")
     st.dataframe(np.round(values_df.mean(),2))
 
-elif option=="Top 10 most volatile stocks":
+def calc_volatility():
     # 3.Top 10 most volatile stocks
     volatility=[]
     for symbol in symbols:
@@ -71,7 +71,7 @@ elif option=="Top 10 most volatile stocks":
     st.write('')
     st.bar_chart(volatility_df.set_index("symbol"))
 
-elif option=="Top 5 performing stocks over the year":
+def yearly_performance():
     # 4.Top 5 performing stocks over the year
     yearly_perf_df=pd.DataFrame()
     top_5=None
@@ -89,7 +89,7 @@ elif option=="Top 5 performing stocks over the year":
         st.subheader(symbol)
         st.line_chart(df)
 
-elif option=="Sector wise performance":
+def sector_wise_performance():
     # show the performence of the sectors
     df=pd.read_sql("select symbol,round(yearly_returns,3) as yearly_returns from yearly_returns",engine)
     sectors_df=pd.read_csv('Sector_data.csv')
@@ -100,7 +100,7 @@ elif option=="Sector wise performance":
     sector_perf=merged_df.groupby("sector")['yearly_returns'].mean()
     st.bar_chart(sector_perf)
 
-elif option=="stock price correlation":
+def stocks_correlation():
     #show the correlation between stocks
     price_df=pd.DataFrame()
     for symbol in symbols:
@@ -117,7 +117,7 @@ elif option=="stock price correlation":
     sns.heatmap(corr,ax=ax)
     st.pyplot(fig)
 
-elif option=="monthly gainers and loosers":
+def monthly_performance():
     monthly_returns=[]
     for symbol in symbols:
         query=f"select date,month,close from `{symbol}` order by date"
@@ -147,3 +147,24 @@ elif option=="monthly gainers and loosers":
         ax.set_title(month)
         ax.tick_params(axis="x",rotation=45,labelsize=7)
         st.pyplot(fig)
+
+if option == "Top 10 gainers and losers":
+    show_gainers_loosers()
+
+elif option=="Red & Green stocks count,average price and average volume":
+    calc_statistics()
+
+elif option=="Top 10 most volatile stocks":
+    calc_volatility()
+
+elif option=="Top 5 performing stocks over the year":
+    yearly_performance()
+
+elif option=="Sector wise performance":
+    sector_wise_performance()
+
+elif option=="stock price correlation":
+    stocks_correlation()
+
+elif option=="monthly gainers and loosers":
+    monthly_performance()
